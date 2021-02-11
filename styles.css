@@ -19,7 +19,7 @@ h4{font-size:40px}
     margin: 0px;
 }
 #dash{padding: 0;}
-h1{
+header>h1{
     text-align: center;
     padding: 20px;
 }
@@ -40,8 +40,8 @@ h1{
     background-color: blue;
     color: white;
 }
-#button{
-    font-size: 40px;
+.button{
+    font-size: 20px;
     margin: 0;
 }
 .navbar{
@@ -52,4 +52,35 @@ h1{
 #dates{
     justify-content: space-around;
     margin-top: 10px;
+}
+header.top-scorer{
+    display: flex;
+    justify-content: center;
+}
+.top-scorer, .stats-row{display: flex;}
+.card-title{text-align: center;}
+.stats-row{margin-bottom: 1rem;}
+.top-scorer{
+    border-bottom: solid black 1px;
+    margin-bottom: 1rem;
+}
+#scorer-info > #logo{
+    float: right;
+    margin-bottom: 2rem;
+    max-width: 30%;
+    height: auto;
+}
+#pos, #name, #team{
+    margin-right: 1rem;
+    margin-bottom: 0rem;
+}
+.stats-row > #logo{
+    margin-right: 1rem;
+    max-width: 12%;
+    height: auto;
+}
+#team{font-size: 15px;}
+#stat{
+    margin-left: auto;
+    float: right;
 }
