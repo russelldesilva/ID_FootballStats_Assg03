@@ -23,7 +23,7 @@ header>h1{
     text-align: center;
     padding: 20px;
 }
-#btn-container{
+.btn-container{
     display: flex;
     flex-direction: row;
     justify-content: center;
@@ -36,7 +36,7 @@ header>h1{
     background-color: white;
     color:blue
 }
-#btn-container:hover{
+.btn-container:hover{
     background-color: blue;
     color: white;
 }
@@ -64,23 +64,33 @@ header.top-scorer{
     border-bottom: solid black 1px;
     margin-bottom: 1rem;
 }
-#scorer-info > #logo{
-    float: right;
+.top-scorer > #logo{
     margin-bottom: 2rem;
-    max-width: 30%;
+    width: 25%;
     height: auto;
+}
+#card-container{
+    margin-left: auto;
+    float: right;
 }
 #pos, #name, #team{
     margin-right: 1rem;
     margin-bottom: 0rem;
 }
-.stats-row > #logo{
+.stats-row> #logo{
     margin-right: 1rem;
-    max-width: 12%;
+    width: 7%;
     height: auto;
 }
 #team{font-size: 15px;}
 #stat{
     margin-left: auto;
     float: right;
+}
+.team-header{display: flex;}
+.team-header > #logo{
+    width: 14%;
+    height: auto;
+    margin-bottom: auto;
+    margin-top: auto;
 }

@@ -3,4 +3,5 @@ function newPage(url){ //open new page in same tab
     tab.focus();
 }
 
-$("#btn-container").click(function(){newPage("table.html")});
+$("#view-table").click(function(){newPage("table.html")});
+$("#view-stats").click(function(){newPage("stats2.html")});
