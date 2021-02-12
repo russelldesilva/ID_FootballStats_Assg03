@@ -93,4 +93,15 @@ header.top-scorer{
     height: auto;
     margin-bottom: auto;
     margin-top: auto;
+    padding-left: 1rem;
 }
+#h2h-stats{margin-left: 0px;}
+.other-stats{
+    border-top: black solid 1px;
+    border-bottom: black solid 1px;
+}
+.other-stats > div > *{
+    font-size:15px;
+    margin-top: 0.5rem;
+}
+div.row{margin-top: 0.5rem;}

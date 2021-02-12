@@ -5,3 +5,4 @@ function newPage(url){ //open new page in same tab
 
 $("#view-table").click(function(){newPage("table.html")});
 $("#view-stats").click(function(){newPage("stats2.html")});
+$("#h2h-stats").click(function(){newPage("stats3.html")});
