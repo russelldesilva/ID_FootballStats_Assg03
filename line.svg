@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="36" height="8" viewBox="0 0 36 8" class="score" id="dash">
+    <g stroke="#ffffff" stroke-width="1">
+    <rect width="36" height="8" stroke="none"/>
+    <rect x="0.5" y="0.5" width="35" height="7" fill="white"/>
+    </g>
+</svg>

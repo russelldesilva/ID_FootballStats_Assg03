@@ -2,7 +2,135 @@ function newPage(url){ //open new page in same tab
     var tab = window.open(url,'_self'); //adapted from Stackoverflow https://stackoverflow.com/questions/8454510/open-url-in-same-window-and-in-same-tab
     tab.focus();
 }
+function getFullDate(datetime){
+    return new Date(datetime.getFullYear(),datetime.getMonth(),datetime.getDate());
+}    
+
+function initDateArray(dateArray, checkdate){
+    for (let index = 0; index < dateArray.length; index++) {
+        if (dateArray[index].getTime() == checkdate.getTime()){
+            return true;
+        }
+    }
+    return false;
+}
+
+
+function matchValid(fixture){
+    let status = fixture.fixture.status.short;
+    console.log(status);
+    if (status === "NS" || status === "TBD" || status === "SUSP" || status === "INT" || 
+    status === "PST" || status === "CANC" || status === "ABD" || status === "AWD" || status === "WO"){
+        return [false, status];
+    }
+    else {
+        return [true, status];
+    }
+}
+
 
 $("#view-table").click(function(){newPage("table.html")});
 $("#view-stats").click(function(){newPage("stats2.html")});
 $("#h2h-stats").click(function(){newPage("stats3.html")});
+
+//============ index.html ================
+//Get next 10 fixtures
+var settings = {
+    "url": "https://api-football-v1.p.rapidapi.com/v3/fixtures?league=39&season=2020&timezone=Asia/Singapore&next=10",
+    "method": "GET",
+    "timeout": 0,
+    "headers": {
+        "x-rapidapi-key": "89f6bb3f0cmshbe238b12b48adb9p15e37bjsnc3cca11640dc"
+    },
+};
+$.ajax(settings).done(function (response) {
+    let data = response.response;
+    let dateArray = [];
+    let matchDict = {};
+    for (let index = 0; index < data.length; index++) {
+        let fixture = data[index];
+        //Make div that displays match score
+        let matchCard = document.createElement("section");
+        matchCard.setAttribute("class",`col row match match-${index}`);
+        //Set match info
+        let matchInfo = document.createElement("div");
+        matchInfo.setAttribute("class","match-info");
+        let kickoff = document.createElement("h5");
+        kickoff.setAttribute("id","kickoff");
+        let status = document.createElement("h5");
+        status.setAttribute("class","text-muted");
+        status.setAttribute("id","status");
+        matchInfo.appendChild(kickoff);
+        matchInfo.appendChild(status);
+        //Set home team info
+        let matchHome = document.createElement("div");
+        matchHome.setAttribute("class","col team home-team");
+        let homeName = document.createElement("h3");
+        homeName.setAttribute("id","tname");
+        let homeLogo = document.createElement("img");
+        homeLogo.setAttribute("src",fixture.teams.home.logo)
+        matchHome.appendChild(homeName);
+        matchHome.appendChild(homeLogo);
+        //Set away team info
+        let matchAway = document.createElement("div");
+        matchAway.setAttribute("class","col team away-team");
+        let awayName = document.createElement("h3");
+        awayName.setAttribute("id","tname");
+        let awayLogo = document.createElement("img");
+        awayLogo.setAttribute("src",fixture.teams.away.logo)
+        matchAway.appendChild(awayName);
+        matchAway.appendChild(awayLogo);
+        //Show score board
+        let score = document.createElement("div");
+        score.setAttribute("class","col score");
+        let scoreLine = document.createElement("h4");
+        scoreLine.setAttribute("id","scoreline");
+        score.appendChild(scoreLine);   
+        matchCard.appendChild(matchInfo);
+        matchCard.appendChild(matchHome);
+        matchCard.appendChild(score);
+        matchCard.appendChild(matchAway);
+        let datetime = new Date(fixture.fixture.date);
+        let date = getFullDate(datetime);
+        matchDict[matchCard.outerHTML] = datetime;
+        console.log(datetime, fixture.teams.home.name);
+        if(! initDateArray(dateArray, date)) {
+            dateArray.push(date);
+        }
+    };
+    for (let index = 0; index < dateArray.length; index++) {
+        let dateHeader = document.createElement("header");
+        let dateH6 = document.createElement("h6");
+        dateH6.setAttribute("class",`text-muted matchday header matchday-${index}`);
+        dateHeader.appendChild(dateH6);
+        let matchDay = document.createElement("div");
+        matchDay.setAttribute("class",`row row-cols-2 matchday matchday-${index}`);
+        $("section.container.scores").append(dateHeader);
+        $("section.container.scores").append(matchDay);
+    };
+    for (let index = 0; index < dateArray.length; index++) {
+        $(`h6.matchday-${index}`).html(dateArray[index].toDateString());
+        for (var match in matchDict){
+            if (getFullDate(matchDict[match]).getTime() === dateArray[index].getTime()){
+                $(`div.matchday-${index}`).append(match);
+            }
+        }
+    }
+    for (let index = 0; index < data.length; index++) {
+        let fixture = data[index];
+        $(`.match-${index} > .home-team > #tname`).html(`${fixture.teams.home.name}`)
+        $(`.match-${index} > .away-team > #tname`).html(`${fixture.teams.away.name}`)
+        let datetime = new Date(fixture.fixture.date)
+        $(`.match-${index} > .match-info > #kickoff`).html(`${datetime.getHours().toLocaleString('en-US',{minimumIntegerDigits:2})}:${datetime.getMinutes().toLocaleString('en-US',{minimumIntegerDigits:2})}`)
+        $(`.match-${index} > .match-info > #status`).html(`${fixture.fixture.status.short} - ${fixture.fixture.status.long}`)
+        if (! matchValid(fixture)[0]){
+            $(`.match-${index} > .score > #scoreline`).html("VS");
+        }
+        else{
+            $(`.match-${index} > .score > #scoreline`).html(`
+            <span id = 'hscore'>${fixture.goals.home}</span>
+            <img src="line.svg">
+            <span id = 'hscore'>${fixture.goals.away}</span>`)
+        };
+    }
+});
