@@ -1,3 +1,7 @@
+.no-score{
+    text-align: center;
+    margin-top: 50px;
+}
 .team,.score{
     align-self: center;
     justify-content: center;
@@ -58,10 +62,19 @@ header>h1{
     display: flex;
     flex-direction: row;
 }
+#timespan{
+    justify-self: center;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 8px;
+    background-color: red;
+    color: white;
+    border-radius: 25px;
+    padding: 8px;
+}
 #see-earlier{padding-left: 0px;}
 #see-future{
     float: right;
-    margin-left: auto;
     padding-right: 0px;
 }
 .match-info{
@@ -141,4 +154,3 @@ header.top-scorer{
     font-size:15px;
     margin-top: 0.5rem;
 }
-div.row{margin-top: 0.5rem;}

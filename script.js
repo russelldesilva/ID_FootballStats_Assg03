@@ -27,17 +27,15 @@ function matchValid(fixture){
     }
 }
 
-function next10(dateArray, matchDict, matches, startDate, endDate){
+function next10(dateArray, matchDict, matches, startDate, endDate, compId){
     startDate = new Date(startDate);
-    console.log(startDate);
     let validSDate = `${startDate.getFullYear()}-${(startDate.getMonth()+1).toLocaleString('en-US',{minimumIntegerDigits:2})}-${startDate.getDate().toLocaleString('en-US',{minimumIntegerDigits:2})}`
     endDate = new Date(endDate);
-    console.log(endDate);
     let validEDate = `${endDate.getFullYear()}-${(endDate.getMonth()+1).toLocaleString('en-US',{minimumIntegerDigits:2})}-${endDate.getDate().toLocaleString('en-US',{minimumIntegerDigits:2})}`
-    console.log(validSDate);
-    console.log(validEDate);
+    $("#startdate").html(validSDate);
+    $("#enddate").html(validEDate);
     var settings = {
-        "url": `https://api-football-v1.p.rapidapi.com/v3/fixtures?league=39&from=${validSDate}&to=${validEDate}&season=2020&timezone=Asia/Singapore`,
+        "url": `https://api-football-v1.p.rapidapi.com/v3/fixtures?league=${compId}&from=${validSDate}&to=${validEDate}&season=2020&timezone=Asia/Singapore`,
         "method": "GET",
         "timeout": 0,
         "headers": {
@@ -46,55 +44,61 @@ function next10(dateArray, matchDict, matches, startDate, endDate){
     };
     $.ajax(settings).done(function (response) {
         let data = response.response;
-        for (let index2 = 0; index2 < data.length; index2++) {
-            let fixture = data[index2];
-            let matchCard = createMatchCard(fixture, index2, "notlive");
-            let datetime = new Date(fixture.fixture.date);
-            let date = getFullDate(datetime);
-            matchDict[matchCard.outerHTML] = datetime;
-            console.log(datetime, fixture.teams.home.name);
-            if(! initDateArray(dateArray, date)) {
-                dateArray.push(date);
-            }
-        };
-        matches += data.length;
-        //insert into content into DOM
-        for (let index = 0; index < dateArray.length; index++) {
-            let dateHeader = document.createElement("header");
-            let dateH6 = document.createElement("h6");
-            dateH6.setAttribute("class",`text-muted matchday header matchday-${index}`);
-            dateHeader.appendChild(dateH6);
-            let matchDay = document.createElement("div");
-            matchDay.setAttribute("class",`row row-cols-2 matchday matchday-${index}`);
-            $("section.container.scores").append(dateHeader);
-            $("section.container.scores").append(matchDay);
-        };
-        for (let index = 0; index < dateArray.length; index++) {
-            $(`h6.matchday-${index}`).html(dateArray[index].toDateString());
-            for (var match in matchDict){
-                if (getFullDate(matchDict[match]).getTime() === dateArray[index].getTime()){
-                    $(`div.matchday-${index}`).append(match);
+        if (data.length === 0){
+            $(".no-score").show();
+        }
+        else{
+            $(".no-score").hide();
+            for (let index2 = 0; index2 < data.length; index2++) {
+                let fixture = data[index2];
+                let matchCard = createMatchCard(fixture, index2, "notlive");
+                let datetime = new Date(fixture.fixture.date);
+                let date = getFullDate(datetime);
+                matchDict[matchCard.outerHTML] = datetime;
+                console.log(datetime, fixture.teams.home.name);
+                if(! initDateArray(dateArray, date)) {
+                    dateArray.push(date);
+                }
+            };
+            matches += data.length;
+            //insert into content into DOM
+            for (let index = 0; index < dateArray.length; index++) {
+                let dateHeader = document.createElement("header");
+                let dateH6 = document.createElement("h6");
+                dateH6.setAttribute("class",`text-muted matchday header matchday-${index}`);
+                dateHeader.appendChild(dateH6);
+                let matchDay = document.createElement("div");
+                matchDay.setAttribute("class",`row row-cols-2 matchday matchday-${index}`);
+                $("section.container.scores").append(dateHeader);
+                $("section.container.scores").append(matchDay);
+            };
+            for (let index = 0; index < dateArray.length; index++) {
+                $(`h6.matchday-${index}`).html(dateArray[index].toDateString());
+                for (var match in matchDict){
+                    if (getFullDate(matchDict[match]).getTime() === dateArray[index].getTime()){
+                        $(`div.matchday-${index}`).append(match);
+                    }
                 }
             }
-        }
-        for (let index = 0; index < matches; index++) {
-            let fixture = data[index];
-            $(`.match-${index} > .match-teams > .home-team > #tname`).html(`${fixture.teams.home.name}`)
-            $(`.match-${index} > .match-teams > .away-team > #tname`).html(`${fixture.teams.away.name}`)
-            let datetime = new Date(fixture.fixture.date)
-            $(`.notlive.match-${index} > .match-info > #kickoff`).html(`<h3>${datetime.getHours().toLocaleString('en-US',{minimumIntegerDigits:2})}:${datetime.getMinutes().toLocaleString('en-US',{minimumIntegerDigits:2})}</h3>`)
-            $(`.live.match-${index} > .match-info > #kickoff`).html('<lottie-player src="https://assets3.lottiefiles.com/private_files/lf30_zL4sS7.json"  background="transparent"  speed="2"  style="width: 300px; height: 300px;"  loop  autoplay></lottie-player>');
-            $(`.match-${index} > .match-info > #status`).html(`${fixture.league.round}`.replace("Regular Season","Match Week"))
-            if (! matchValid(fixture)[0]){
-                $(`.match-${index} > .match-teams > .score > #scoreline`).html("VS");
-                $(`.match-${index} > .match-info > #status`).append(`; ${fixture.fixture.status.long}`)
+            for (let index = 0; index < matches; index++) {
+                let fixture = data[index];
+                $(`.match-${index} > .match-teams > .home-team > #tname`).html(`${fixture.teams.home.name}`)
+                $(`.match-${index} > .match-teams > .away-team > #tname`).html(`${fixture.teams.away.name}`)
+                let datetime = new Date(fixture.fixture.date)
+                $(`.notlive.match-${index} > .match-info > #kickoff`).html(`<h3>${datetime.getHours().toLocaleString('en-US',{minimumIntegerDigits:2})}:${datetime.getMinutes().toLocaleString('en-US',{minimumIntegerDigits:2})}</h3>`)
+                $(`.live.match-${index} > .match-info > #kickoff`).html('<lottie-player src="https://assets3.lottiefiles.com/private_files/lf30_zL4sS7.json"  background="transparent"  speed="2"  style="width: 300px; height: 300px;"  loop  autoplay></lottie-player>');
+                $(`.match-${index} > .match-info > #status`).html(`${fixture.league.round}`.replace("Regular Season","Match Week"))
+                if (! matchValid(fixture)[0]){
+                    $(`.match-${index} > .match-teams > .score > #scoreline`).html("VS");
+                    $(`.match-${index} > .match-info > #status`).append(`; ${fixture.fixture.status.long}`)
+                }
+                else{
+                    $(`.match-${index} > .match-teams > .score > #scoreline`).html(`
+                    <span id = 'hscore'>${fixture.goals.home}</span>
+                    <img src="line.svg">
+                    <span id = 'hscore'>${fixture.goals.away}</span>`)
+                };
             }
-            else{
-                $(`.match-${index} > .match-teams > .score > #scoreline`).html(`
-                <span id = 'hscore'>${fixture.goals.home}</span>
-                <img src="line.svg">
-                <span id = 'hscore'>${fixture.goals.away}</span>`)
-            };
         }
     });
 }
@@ -200,17 +204,33 @@ function rowColour(desc){
 $("#view-table").click(function(){newPage("table.html")});
 $("#view-stats").click(function(){newPage("stats2.html")});
 $("#h2h-stats").click(function(){newPage("stats3.html")});
+//============== nav bar =================
+$(".dropdown-item").click(function(){
+    let compId = $(this).attr("id");
+    let compName = $(this).text();
+    localStorage.setItem("compId",compId);
+    localStorage.setItem("compName",compName);
+    newPage((window.location.href).replace("#",""));
+})
 
 //============ index.html ================
-//Get next 10 fixtures
 let dateArray = [];
 let matchDict = {};
 let matches = 0;
 let startDate = Date.now();
 let endDate = startDate + 604800000;
-let firstLoad = true;
+let compId = parseInt(localStorage.getItem("compId"));
+let compName = localStorage.getItem("compName");
+$("#view-table").hide();
+if (compId === null){
+    compId = 39;
+}
+if (compName === null){
+    compName = "English Premier League"
+}
+console.log(compId);
 var settings = {
-    "url": "https://api-football-v1.p.rapidapi.com/v3/fixtures?league=39&live=all",
+    "url": `https://api-football-v1.p.rapidapi.com/v3/fixtures?league=${compId}&live=all`,
     "method": "GET",
     "timeout": 0,
     "headers": {
@@ -232,22 +252,24 @@ $.ajax(settings).done(function (response) {
     };
     matches += data.length;
 });
-next10(dateArray, matchDict, matches, startDate, endDate)
+next10(dateArray, matchDict, matches, startDate, endDate, compId)
 $("#see-future").click(function(){
     startDate += 604800000;
     endDate += 604800000;
     $("section.container.scores > *").remove();
-    next10([], {}, 0, startDate, endDate);
+    $(".no-score").hide();
+    next10([], {}, 0, startDate, endDate, compId);
 })
 $("#see-earlier").click(function(){
     startDate -= 604800000;
     endDate -= 604800000;
     $("section.container.scores > *").remove();
-    next10([], {}, 0, startDate, endDate);
+    $(".no-score").hide();
+    next10([], {}, 0, startDate, endDate, compId);
 })
 //============== table.html ==================
 var settings = {
-    "url": "https://api-football-v1.p.rapidapi.com/v3/standings?league=39&season=2020",
+    "url": `https://api-football-v1.p.rapidapi.com/v3/standings?league=${compId}&season=2020`,
     "method": "GET",
     "timeout": 0,
     "headers": {
@@ -255,28 +277,34 @@ var settings = {
     },
 };
 $.ajax(settings).done(function (response) {
-    data = response.response
-    let standings = data[0].league.standings[0];
-    for (let index = 0; index < standings.length; index++) {
-        desc = standings[index].description;
-        let newTr = createTr(index,desc);
-        $("table.standings tbody").append(newTr);
-        $(`.rank-${index+1} > #pos`).html(standings[index].rank);
-        $(`.rank-${index+1} > #team`).html(`<img src="${standings[index].team.logo}" id="logo"> ${standings[index].team.name}`);
-        $(`.rank-${index+1} > #Pts`).html(standings[index].points);
-        $(`.rank-${index+1} > #GD`).html(standings[index].goalsDiff);
-        $(`.rank-${index+1} > #MP`).html(standings[index].all.played);
-        $(`.rank-${index+1} > #wins`).html(standings[index].all.win);
-        $(`.rank-${index+1} > #draws`).html(standings[index].all.draw);
-        $(`.rank-${index+1} > #losses`).html(standings[index].all.lose);
-        $(`.rank-${index+1} > #GF`).html(standings[index].all.goals.for);
-        $(`.rank-${index+1} > #GA`).html(standings[index].all.goals.against);
-        $(`.rank-${index+1} > #form`).html(standings[index].form);
+    let data = response.response
+    if (data.length === 0){
+        $("#view-table").hide();
+    }
+    else{
+        $("#view-table").show();
+        let standings = data[0].league.standings[0];
+        for (let index = 0; index < standings.length; index++) {
+            desc = standings[index].description;
+            let newTr = createTr(index,desc);
+            $("table.standings tbody").append(newTr);
+            $(`.rank-${index+1} > #pos`).html(standings[index].rank);
+            $(`.rank-${index+1} > #team`).html(`<img src="${standings[index].team.logo}" id="logo"> ${standings[index].team.name}`);
+            $(`.rank-${index+1} > #Pts`).html(standings[index].points);
+            $(`.rank-${index+1} > #GD`).html(standings[index].goalsDiff);
+            $(`.rank-${index+1} > #MP`).html(standings[index].all.played);
+            $(`.rank-${index+1} > #wins`).html(standings[index].all.win);
+            $(`.rank-${index+1} > #draws`).html(standings[index].all.draw);
+            $(`.rank-${index+1} > #losses`).html(standings[index].all.lose);
+            $(`.rank-${index+1} > #GF`).html(standings[index].all.goals.for);
+            $(`.rank-${index+1} > #GA`).html(standings[index].all.goals.against);
+            $(`.rank-${index+1} > #form`).html(standings[index].form);
+        }
     }
 });
 //============== stats.html ==================
 var settings = {
-    "url": "https://api-football-v1.p.rapidapi.com/v3/players/topscorers?league=39&season=2020",
+    "url": `https://api-football-v1.p.rapidapi.com/v3/players/topscorers?league=${compId}&season=2020`,
     "method": "GET",
     "timeout": 0,
     "headers": {
