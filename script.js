@@ -28,6 +28,57 @@ function matchValid(fixture){
     }
 }
 
+function next10{
+
+}
+
+function createMatchCard(fixture, index, live){
+    live = live || null;
+    //Make div that displays match score
+    let matchCard = document.createElement("section");
+    matchCard.setAttribute("class",`col row ${live} match match-${index}`);
+    //Set match info
+    let matchInfo = document.createElement("div");
+    matchInfo.setAttribute("class","match-info");
+    let kickoff = document.createElement("div");
+    kickoff.setAttribute("id","kickoff");
+    let status = document.createElement("h5");
+    status.setAttribute("id","status");
+    matchInfo.appendChild(kickoff);
+    matchInfo.appendChild(status);
+    let matchTeams = document.createElement("div");
+    matchTeams.setAttribute("class","row match-teams")
+    //Set home team info
+    let matchHome = document.createElement("div");
+    matchHome.setAttribute("class","col team home-team");
+    let homeName = document.createElement("h3");
+    homeName.setAttribute("id","tname");
+    let homeLogo = document.createElement("img");
+    homeLogo.setAttribute("src",fixture.teams.home.logo)
+    matchHome.appendChild(homeName);
+    matchHome.appendChild(homeLogo);
+    //Set away team info
+    let matchAway = document.createElement("div");
+    matchAway.setAttribute("class","col team away-team");
+    let awayName = document.createElement("h3");
+    awayName.setAttribute("id","tname");
+    let awayLogo = document.createElement("img");
+    awayLogo.setAttribute("src",fixture.teams.away.logo)
+    matchAway.appendChild(awayName);
+    matchAway.appendChild(awayLogo);
+    //Show score board
+    let score = document.createElement("div");
+    score.setAttribute("class","col score");
+    let scoreLine = document.createElement("h4");
+    scoreLine.setAttribute("id","scoreline");
+    score.appendChild(scoreLine);   
+    matchCard.appendChild(matchInfo);
+    matchTeams.appendChild(matchHome);
+    matchTeams.appendChild(score);
+    matchTeams.appendChild(matchAway);
+    matchCard.append(matchTeams);
+    return matchCard;
+}
 
 $("#view-table").click(function(){newPage("table.html")});
 $("#view-stats").click(function(){newPage("stats2.html")});
@@ -35,6 +86,32 @@ $("#h2h-stats").click(function(){newPage("stats3.html")});
 
 //============ index.html ================
 //Get next 10 fixtures
+let dateArray = [];
+let matchDict = {};
+let matches = 0;
+var settings = {
+    "url": "https://api-football-v1.p.rapidapi.com/v3/fixtures?league=39&live=all",
+    "method": "GET",
+    "timeout": 0,
+    "headers": {
+      "x-rapidapi-key": "89f6bb3f0cmshbe238b12b48adb9p15e37bjsnc3cca11640dc"
+    },
+};
+$.ajax(settings).done(function (response) {
+    let data = response.response;
+    for (let index1 = 0; index1 < data.length; index1++) {
+        let fixture = data[index1];
+        let matchCard = createMatchCard(fixture, index1, "live");
+        let datetime = new Date(fixture.fixture.date);
+        let date = getFullDate(datetime);
+        matchDict[matchCard.outerHTML] = datetime;
+        console.log(datetime, fixture.teams.home.name);
+        if(! initDateArray(dateArray, date)) {
+            dateArray.push(date);
+        }
+    };
+    matches += data.length;
+});
 var settings = {
     "url": "https://api-football-v1.p.rapidapi.com/v3/fixtures?league=39&season=2020&timezone=Asia/Singapore&next=10",
     "method": "GET",
@@ -45,51 +122,9 @@ var settings = {
 };
 $.ajax(settings).done(function (response) {
     let data = response.response;
-    let dateArray = [];
-    let matchDict = {};
-    for (let index = 0; index < data.length; index++) {
-        let fixture = data[index];
-        //Make div that displays match score
-        let matchCard = document.createElement("section");
-        matchCard.setAttribute("class",`col row match match-${index}`);
-        //Set match info
-        let matchInfo = document.createElement("div");
-        matchInfo.setAttribute("class","match-info");
-        let kickoff = document.createElement("h5");
-        kickoff.setAttribute("id","kickoff");
-        let status = document.createElement("h5");
-        status.setAttribute("class","text-muted");
-        status.setAttribute("id","status");
-        matchInfo.appendChild(kickoff);
-        matchInfo.appendChild(status);
-        //Set home team info
-        let matchHome = document.createElement("div");
-        matchHome.setAttribute("class","col team home-team");
-        let homeName = document.createElement("h3");
-        homeName.setAttribute("id","tname");
-        let homeLogo = document.createElement("img");
-        homeLogo.setAttribute("src",fixture.teams.home.logo)
-        matchHome.appendChild(homeName);
-        matchHome.appendChild(homeLogo);
-        //Set away team info
-        let matchAway = document.createElement("div");
-        matchAway.setAttribute("class","col team away-team");
-        let awayName = document.createElement("h3");
-        awayName.setAttribute("id","tname");
-        let awayLogo = document.createElement("img");
-        awayLogo.setAttribute("src",fixture.teams.away.logo)
-        matchAway.appendChild(awayName);
-        matchAway.appendChild(awayLogo);
-        //Show score board
-        let score = document.createElement("div");
-        score.setAttribute("class","col score");
-        let scoreLine = document.createElement("h4");
-        scoreLine.setAttribute("id","scoreline");
-        score.appendChild(scoreLine);   
-        matchCard.appendChild(matchInfo);
-        matchCard.appendChild(matchHome);
-        matchCard.appendChild(score);
-        matchCard.appendChild(matchAway);
+    for (let index2 = 0; index2 < data.length; index2++) {
+        let fixture = data[index2];
+        let matchCard = createMatchCard(fixture, index2, "notlive");
         let datetime = new Date(fixture.fixture.date);
         let date = getFullDate(datetime);
         matchDict[matchCard.outerHTML] = datetime;
@@ -98,6 +133,8 @@ $.ajax(settings).done(function (response) {
             dateArray.push(date);
         }
     };
+    matches += data.length;
+    //insert into content into DOM
     for (let index = 0; index < dateArray.length; index++) {
         let dateHeader = document.createElement("header");
         let dateH6 = document.createElement("h6");
@@ -116,18 +153,19 @@ $.ajax(settings).done(function (response) {
             }
         }
     }
-    for (let index = 0; index < data.length; index++) {
+    for (let index = 0; index < matches; index++) {
         let fixture = data[index];
         $(`.match-${index} > .home-team > #tname`).html(`${fixture.teams.home.name}`)
         $(`.match-${index} > .away-team > #tname`).html(`${fixture.teams.away.name}`)
         let datetime = new Date(fixture.fixture.date)
-        $(`.match-${index} > .match-info > #kickoff`).html(`${datetime.getHours().toLocaleString('en-US',{minimumIntegerDigits:2})}:${datetime.getMinutes().toLocaleString('en-US',{minimumIntegerDigits:2})}`)
-        $(`.match-${index} > .match-info > #status`).html(`${fixture.fixture.status.short} - ${fixture.fixture.status.long}`)
+        $(`.notlive.match-${index} > .match-info > #kickoff`).html(`<h3>${datetime.getHours().toLocaleString('en-US',{minimumIntegerDigits:2})}:${datetime.getMinutes().toLocaleString('en-US',{minimumIntegerDigits:2})}</h3>`)
+        $(`.live.match-${index} > .match-info > #kickoff`).html('<lottie-player src="https://assets3.lottiefiles.com/private_files/lf30_zL4sS7.json"  background="transparent"  speed="2"  style="width: 300px; height: 300px;"  loop  autoplay></lottie-player>');
+        $(`.match-${index} > .match-info > #status`).html(`${fixture.fixture.status.long}`)
         if (! matchValid(fixture)[0]){
-            $(`.match-${index} > .score > #scoreline`).html("VS");
+            $(`.match-${index} > .match-teams > .score > #scoreline`).html("VS");
         }
         else{
-            $(`.match-${index} > .score > #scoreline`).html(`
+            $(`.match-${index} > .match-teams > .score > #scoreline`).html(`
             <span id = 'hscore'>${fixture.goals.home}</span>
             <img src="line.svg">
             <span id = 'hscore'>${fixture.goals.away}</span>`)

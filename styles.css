@@ -54,17 +54,42 @@ header>h1{
     justify-content: space-around;
     margin-top: 10px;
 }
+.pastandfuture{
+    display: flex;
+    flex-direction: row;
+}
+#see-earlier{padding-left: 0px;}
+#see-future{
+    float: right;
+    margin-left: auto;
+    padding-right: 0px;
+}
 .match-info{
+    text-align: center;
     display: flex;
     justify-content: center;
     flex-direction: column;
     border-bottom: solid gray 1px;
+    color: #6c757d;
 }   
-#status{
-    text-align: center;
-    font-size: 15px;
+.live{background-color: steelblue;}
+.live > .match-info {
+    color: white;
 }
-#kickoff{text-align: center;}
+.live > .match-info > #status{
+    font-size: 15px;
+    position: relative;
+    top: -100px;
+}
+.live > .match-teams{
+    position: relative;
+    top: -100px;
+}
+#kickoff{
+    text-align: center;
+    display: flex;
+    justify-content: center;
+}
 header.top-scorer{
     display: flex;
     justify-content: center;
