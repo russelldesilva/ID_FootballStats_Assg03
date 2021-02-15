@@ -79,14 +79,15 @@ function next10(dateArray, matchDict, matches, startDate, endDate){
         }
         for (let index = 0; index < matches; index++) {
             let fixture = data[index];
-            $(`.match-${index} > .home-team > #tname`).html(`${fixture.teams.home.name}`)
-            $(`.match-${index} > .away-team > #tname`).html(`${fixture.teams.away.name}`)
+            $(`.match-${index} > .match-teams > .home-team > #tname`).html(`${fixture.teams.home.name}`)
+            $(`.match-${index} > .match-teams > .away-team > #tname`).html(`${fixture.teams.away.name}`)
             let datetime = new Date(fixture.fixture.date)
             $(`.notlive.match-${index} > .match-info > #kickoff`).html(`<h3>${datetime.getHours().toLocaleString('en-US',{minimumIntegerDigits:2})}:${datetime.getMinutes().toLocaleString('en-US',{minimumIntegerDigits:2})}</h3>`)
             $(`.live.match-${index} > .match-info > #kickoff`).html('<lottie-player src="https://assets3.lottiefiles.com/private_files/lf30_zL4sS7.json"  background="transparent"  speed="2"  style="width: 300px; height: 300px;"  loop  autoplay></lottie-player>');
-            $(`.match-${index} > .match-info > #status`).html(`${fixture.fixture.status.long}`)
+            $(`.match-${index} > .match-info > #status`).html(`${fixture.league.round}`.replace("Regular Season","Match Week"))
             if (! matchValid(fixture)[0]){
                 $(`.match-${index} > .match-teams > .score > #scoreline`).html("VS");
+                $(`.match-${index} > .match-info > #status`).append(`; ${fixture.fixture.status.long}`)
             }
             else{
                 $(`.match-${index} > .match-teams > .score > #scoreline`).html(`
