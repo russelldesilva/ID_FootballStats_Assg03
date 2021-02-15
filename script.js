@@ -146,6 +146,56 @@ function createMatchCard(fixture, index, live){
     return matchCard;
 }
 
+function createTr(index,desc){
+    let newTr = document.createElement("tr");
+    newTr.setAttribute("class",`rank rank-${index+1} ${rowColour(desc)}`);
+    let newPos = document.createElement("th");
+    newPos.setAttribute("scope","row");
+    newPos.setAttribute("id","pos");
+    let newTeam = document.createElement("td");
+    newTeam.setAttribute("id","team");
+    let newPts = document.createElement("th");
+    newPts.setAttribute("scope","row");
+    newPts.setAttribute("id","Pts");
+    let newGD = document.createElement("th");
+    newGD.setAttribute("scope","row");
+    newGD.setAttribute("id","GD");
+    let newMP = document.createElement("td");
+    newMP.setAttribute("id","MP");
+    let newWins = document.createElement("td");
+    newWins.setAttribute("id","wins");
+    let newDraws = document.createElement("td");
+    newDraws.setAttribute("id","draws");
+    let newLoss = document.createElement("td");
+    newLoss.setAttribute("id","losses");
+    let newGF = document.createElement("td");
+    newGF.setAttribute("id","GF");
+    let newGA = document.createElement("td");
+    newGA.setAttribute("id","GA");
+    let newForm = document.createElement("td");
+    newForm.setAttribute("id","form");
+    newTr.append(newPos,newTeam,newPts,newGD,newGD,newMP,
+        newWins,newDraws,newLoss,newGF,newGA,newForm);
+    return newTr;
+}
+
+function rowColour(desc){
+    if (desc != null){
+        if (desc ===  "Promotion - Champions League (Group Stage)"){
+            return "table-success";
+        }
+        else if (desc === "Promotion - Europa League (Group Stage)"){
+            return "table-warning";
+        }
+        else if (desc.includes("Relegation")){
+            return "table-danger";
+        }
+    }
+    else{
+        return "";
+    }
+}
+
 $("#view-table").click(function(){newPage("table.html")});
 $("#view-stats").click(function(){newPage("stats2.html")});
 $("#h2h-stats").click(function(){newPage("stats3.html")});
@@ -194,3 +244,45 @@ $("#see-earlier").click(function(){
     $("section.container.scores > *").remove();
     next10([], {}, 0, startDate, endDate);
 })
+//============== table.html ==================
+var settings = {
+    "url": "https://api-football-v1.p.rapidapi.com/v3/standings?league=39&season=2020",
+    "method": "GET",
+    "timeout": 0,
+    "headers": {
+      "x-rapidapi-key": "89f6bb3f0cmshbe238b12b48adb9p15e37bjsnc3cca11640dc"
+    },
+};
+$.ajax(settings).done(function (response) {
+    data = response.response
+    let standings = data[0].league.standings[0];
+    for (let index = 0; index < standings.length; index++) {
+        desc = standings[index].description;
+        let newTr = createTr(index,desc);
+        $("table.standings tbody").append(newTr);
+        $(`.rank-${index+1} > #pos`).html(standings[index].rank);
+        $(`.rank-${index+1} > #team`).html(`<img src="${standings[index].team.logo}" id="logo"> ${standings[index].team.name}`);
+        $(`.rank-${index+1} > #Pts`).html(standings[index].points);
+        $(`.rank-${index+1} > #GD`).html(standings[index].goalsDiff);
+        $(`.rank-${index+1} > #MP`).html(standings[index].all.played);
+        $(`.rank-${index+1} > #wins`).html(standings[index].all.win);
+        $(`.rank-${index+1} > #draws`).html(standings[index].all.draw);
+        $(`.rank-${index+1} > #losses`).html(standings[index].all.lose);
+        $(`.rank-${index+1} > #GF`).html(standings[index].all.goals.for);
+        $(`.rank-${index+1} > #GA`).html(standings[index].all.goals.against);
+        $(`.rank-${index+1} > #form`).html(standings[index].form);
+    }
+});
+//============== stats.html ==================
+var settings = {
+    "url": "https://api-football-v1.p.rapidapi.com/v3/players/topscorers?league=39&season=2020",
+    "method": "GET",
+    "timeout": 0,
+    "headers": {
+      "x-rapidapi-key": "89f6bb3f0cmshbe238b12b48adb9p15e37bjsnc3cca11640dc"
+    },
+};
+
+$.ajax(settings).done(function (response) {
+    console.log(response);
+});
