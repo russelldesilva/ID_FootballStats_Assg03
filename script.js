@@ -186,11 +186,14 @@ function createTr(index,desc){
 
 function rowColour(desc){
     if (desc != null){
-        if (desc ===  "Promotion - Champions League (Group Stage)"){
+        if (desc ===  "Promotion - Champions League (Group Stage)" || desc === "Promotion - Champions League (Round of 16)" || desc == "Promotion - Europa League (Play Offs)"){
             return "table-success";
         }
-        else if (desc === "Promotion - Europa League (Group Stage)"){
+        else if (desc === "Promotion - Europa League (Group Stage)" || desc === "Promotion - Europa League (Round of 32)"){
             return "table-warning";
+        }
+        else if (desc == "Promotion - Champions League (Qualification)"){
+            return "table-info"
         }
         else if (desc.includes("Relegation")){
             return "table-danger";
@@ -222,12 +225,17 @@ let endDate = startDate + 604800000;
 let compId = parseInt(localStorage.getItem("compId"));
 let compName = localStorage.getItem("compName");
 $("#view-table").hide();
+$(".no-score").hide();
+$(".no-table").hide()
+$(".no-goals").hide();
+$("ul.top-scorer-list, .top-scorer").hide();
 if (compId === null){
     compId = 39;
 }
 if (compName === null){
     compName = "English Premier League"
 }
+$("header>h1").html(compName);
 console.log(compId);
 var settings = {
     "url": `https://api-football-v1.p.rapidapi.com/v3/fixtures?league=${compId}&live=all`,
@@ -280,9 +288,13 @@ $.ajax(settings).done(function (response) {
     let data = response.response
     if (data.length === 0){
         $("#view-table").hide();
+        $("table.standings").hide();
+        $(".no-table").show()
     }
     else{
         $("#view-table").show();
+        $("table.standings").show();
+        $(".no-table").hide()
         let standings = data[0].league.standings[0];
         for (let index = 0; index < standings.length; index++) {
             desc = standings[index].description;
@@ -313,5 +325,30 @@ var settings = {
 };
 
 $.ajax(settings).done(function (response) {
-    console.log(response);
+    let data = response.response;
+    if (data.length < 10){
+        $(".no-goals").show();
+        $("ul.top-scorer-list, .top-scorer").hide();
+    }
+    else{
+        $(".no-goals").hide();
+        $("ul.top-scorer-list, .top-scorer").show();
+        let topscorer = data[0];
+        let playerName = topscorer.player.name;
+        $(".top-scorer > #scorer-info > #name").text(playerName);
+        $(".top-scorer > #scorer-info > #team").text(topscorer.statistics[0].team.name);
+        $(".top-scorer > #logo").attr("src", topscorer.statistics[0].team.logo);
+        $(".top-scorer > #card-container > .card > img").attr("src",topscorer.player.photo);
+        $(".top-scorer > #card-container > .card > img").attr("alt",playerName);
+        $(".top-scorer > #card-container > .card > img").attr("title",playerName);
+        $(".top-scorer > #card-container > .card > h2 > #goals").text(topscorer.statistics[0].goals.total);
+        for (let index = 1; index < 10; index++) {
+            let player = data[index];
+            console.log(index, player);
+            $(`#pos-${index+1}.stats-row > #logo`).attr("src",player.statistics[0].team.logo);
+            $(`#pos-${index+1}.stats-row > .player > #name`).text(player.player.name);
+            $(`#pos-${index+1}.stats-row > .player > #team`).text(player.statistics[0].team.name);
+            $(`#pos-${index+1}.stats-row > #stat > #goals`).text(player.statistics[0].goals.total);
+        }
+    }
 });

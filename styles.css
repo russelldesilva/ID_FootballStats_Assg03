@@ -1,4 +1,4 @@
-.no-score{
+.no-score, .no-table, .no-goals{
     text-align: center;
     margin-top: 50px;
 }
@@ -131,6 +131,9 @@ header.top-scorer{
     margin-right: 1rem;
     width: 7%;
     height: auto;
+}
+#pos-10.stats-row > #pos{
+    margin-right: 0.5rem;
 }
 #team{font-size: 15px;}
 #stat{
