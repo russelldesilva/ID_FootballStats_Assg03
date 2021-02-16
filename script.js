@@ -295,22 +295,45 @@ $.ajax(settings).done(function (response) {
         $("#view-table").show();
         $("table.standings").show();
         $(".no-table").hide()
-        let standings = data[0].league.standings[0];
-        for (let index = 0; index < standings.length; index++) {
-            desc = standings[index].description;
-            let newTr = createTr(index,desc);
-            $("table.standings tbody").append(newTr);
-            $(`.rank-${index+1} > #pos`).html(standings[index].rank);
-            $(`.rank-${index+1} > #team`).html(`<img src="${standings[index].team.logo}" id="logo"> ${standings[index].team.name}`);
-            $(`.rank-${index+1} > #Pts`).html(standings[index].points);
-            $(`.rank-${index+1} > #GD`).html(standings[index].goalsDiff);
-            $(`.rank-${index+1} > #MP`).html(standings[index].all.played);
-            $(`.rank-${index+1} > #wins`).html(standings[index].all.win);
-            $(`.rank-${index+1} > #draws`).html(standings[index].all.draw);
-            $(`.rank-${index+1} > #losses`).html(standings[index].all.lose);
-            $(`.rank-${index+1} > #GF`).html(standings[index].all.goals.for);
-            $(`.rank-${index+1} > #GA`).html(standings[index].all.goals.against);
-            $(`.rank-${index+1} > #form`).html(standings[index].form);
+        let groups = data[0].league.standings;
+        for (let i = 0; i < groups.length; i++) {
+            let standings = groups[i]
+            let grpTable = document.createElement("table");
+            grpTable.setAttribute("class",`table table-hover standings-${i} caption-top`);
+            let caption = document.createElement("caption");
+            let newThead = document.createElement("thead");
+            let newTbody = document.createElement("tbody");
+            grpTable.appendChild(caption);
+            grpTable.appendChild(newThead);
+            grpTable.appendChild(newTbody);
+            $("section.tables").append(grpTable);
+            $(`table.standings-${i} > thead`).html(`<tr>
+            <th scope="col">Position</th>
+            <th scope="col">Team</th>
+            <th scope="col" class="table-secondary">Points</th>
+            <th scope="col" class="table-secondary">GD</th>
+            <th scope="col">MP</th><th scope="col">W</th>
+            <th scope="col">D</th><th scope="col">L</th>
+            <th scope="col">GF</th><th scope="col">GA</th>
+            <th scope="col">Form</th>
+            </tr>`);
+            $(`table.standings-${i} > caption`).html(standings[0].group);
+            for (let index = 0; index < standings.length; index++) {
+                desc = standings[index].description;
+                let newTr = createTr(index,desc);
+                $(`table.standings-${i} > tbody`).append(newTr);
+                $(`table.standings-${i} > tbody > .rank-${index+1} > #pos`).html(standings[index].rank);
+                $(`table.standings-${i} > tbody > .rank-${index+1} > #team`).html(`<img src="${standings[index].team.logo}" id="logo"> ${standings[index].team.name}`);
+                $(`table.standings-${i} > tbody > .rank-${index+1} > #Pts`).html(standings[index].points);
+                $(`table.standings-${i} > tbody > .rank-${index+1} > #GD`).html(standings[index].goalsDiff);
+                $(`table.standings-${i} > tbody > .rank-${index+1} > #MP`).html(standings[index].all.played);
+                $(`table.standings-${i} > tbody > .rank-${index+1} > #wins`).html(standings[index].all.win);
+                $(`table.standings-${i} > tbody > .rank-${index+1} > #draws`).html(standings[index].all.draw);
+                $(`table.standings-${i} > tbody > .rank-${index+1} > #losses`).html(standings[index].all.lose);
+                $(`table.standings-${i} > tbody > .rank-${index+1} > #GF`).html(standings[index].all.goals.for);
+                $(`table.standings-${i} > tbody > .rank-${index+1} > #GA`).html(standings[index].all.goals.against);
+                $(`table.standings-${i} > tbody > .rank-${index+1} > #form`).html(standings[index].form);
+            }
         }
     }
 });
