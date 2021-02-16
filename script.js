@@ -229,7 +229,7 @@ $(".no-score").hide();
 $(".no-table").hide()
 $(".no-goals").hide();
 $("ul.top-scorer-list, .top-scorer").hide();
-if (compId === null){
+if (isNaN(compId)){
     compId = 39;
 }
 if (compName === null){
