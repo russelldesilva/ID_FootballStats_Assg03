@@ -27,6 +27,23 @@ function matchValid(fixture){
     }
 }
 
+function roundName(name){
+    let newName = name;
+    if (name.includes("Regular Season")){
+        newName = name.replace("Regular Season","Match Week")
+    }
+    else if (name.includes("8th")){
+        newName = "Round of 16";
+    }
+    else if (name.includes("16th")){
+        newName = "Round of 32";
+    }
+    else if (name.includes("32nd")){
+        newName = "Round of 64";
+    }
+    return newName;
+}
+
 function next10(dateArray, matchDict, matches, startDate, endDate, compId){
     startDate = new Date(startDate);
     let validSDate = `${startDate.getFullYear()}-${(startDate.getMonth()+1).toLocaleString('en-US',{minimumIntegerDigits:2})}-${startDate.getDate().toLocaleString('en-US',{minimumIntegerDigits:2})}`
@@ -87,7 +104,7 @@ function next10(dateArray, matchDict, matches, startDate, endDate, compId){
                 let datetime = new Date(fixture.fixture.date)
                 $(`.notlive.match-${index} > .match-info > #kickoff`).html(`<h3>${datetime.getHours().toLocaleString('en-US',{minimumIntegerDigits:2})}:${datetime.getMinutes().toLocaleString('en-US',{minimumIntegerDigits:2})}</h3>`)
                 $(`.live.match-${index} > .match-info > #kickoff`).html('<lottie-player src="https://assets3.lottiefiles.com/private_files/lf30_zL4sS7.json"  background="transparent"  speed="2"  style="width: 300px; height: 300px;"  loop  autoplay></lottie-player>');
-                $(`.match-${index} > .match-info > #status`).html(`${fixture.league.round}`.replace("Regular Season","Match Week"))
+                $(`.match-${index} > .match-info > #status`).html(`${roundName(fixture.league.round)}`)
                 if (! matchValid(fixture)[0]){
                     $(`.match-${index} > .match-teams > .score > #scoreline`).html("VS");
                     $(`.match-${index} > .match-info > #status`).append(`; ${fixture.fixture.status.long}`)
@@ -99,6 +116,27 @@ function next10(dateArray, matchDict, matches, startDate, endDate, compId){
                     <span id = 'hscore'>${fixture.goals.away}</span>`)
                 };
             }
+        }
+    });
+}
+
+function searchTeam(searchTerm,resultsId){
+    var settings = {
+        "url": `https://api-football-v1.p.rapidapi.com/v3/teams?search=${searchTerm}`,
+        "method": "GET",
+        "timeout": 0,
+        "headers": {
+          "x-rapidapi-key": "89f6bb3f0cmshbe238b12b48adb9p15e37bjsnc3cca11640dc"
+        },
+      };
+      
+      $.ajax(settings).done(function (response) {
+        let data = response.response;
+        for (let index = 0; index < data.length; index++) {
+            let newOption = document.createElement("option");
+            newOption.setAttribute("id",`teamId-${data[index].team.id}`);
+            newOption.setAttribute("value",`${data[index].team.name}`);
+            $(`datalist#${resultsId}`).append(newOption);
         }
     });
 }
@@ -373,5 +411,21 @@ $.ajax(settings).done(function (response) {
             $(`#pos-${index+1}.stats-row > .player > #team`).text(player.statistics[0].team.name);
             $(`#pos-${index+1}.stats-row > #stat > #goals`).text(player.statistics[0].goals.total);
         }
+    }
+});
+
+//================= stats2.hhtml ==============
+$("input#search").keyup(function(){
+    let searchTerm = $("input#search").val();
+    if (searchTerm.length === 3){
+        $("datalist#results > *").remove();
+        searchTeam(searchTerm,"results");
+    }
+});
+$("input#search1").keyup(function(){
+    let searchTerm = $("input#search1").val();
+    if (searchTerm.length === 3){
+        $("datalist#results > *").remove();
+        searchTeam(searchTerm,"results1");
     }
 });
