@@ -81,7 +81,7 @@
                     <div class="row">
                         <div class="col">
                             <p class="text-muted">Enter Team Name</p>
-                            <form class = "departure">
+                            <form class = "search">
                                 <input type="search" placeholder="Search" id = "search" class="form-control" required list="results">
                             </form>
                             <datalist id="results">
@@ -90,11 +90,11 @@
                     </div>
                     <div class="row">
                         <div class="col-8 team-stats">
-                            <header class="team-header">
-                                <h2>Manchester United</h2>
-                                <img src="https://media.api-sports.io/football/teams/33.png" id="logo">
+                            <header class="team-header" id="table-1">
+                                <h2 id="team-name"></h2>
+                                <img src="" id="logo">
                             </header>
-                            <table class="table table-hover">
+                            <table class="table table-hover" id="table-1">
                                 <thead>
                                     <tr>
                                         <th></th>
@@ -104,59 +104,59 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr>
+                                    <tr class="gplayed">
                                         <td>Games Played</td>
-                                        <td>19</td>
-                                        <td>19</td>
-                                        <td class="table-info">38</td>
+                                        <td id="home"></td>
+                                        <td id="away"></td>
+                                        <td class="table-info" id="total"></td>
                                     </tr>
-                                    <tr>
+                                    <tr class="wins">
                                         <td>Wins</td>
-                                        <td>19</td>
-                                        <td>19</td>
-                                        <td class="table-info">38</td>
+                                        <td id="home"></td>
+                                        <td id="away"></td>
+                                        <td class="table-info" id="total"></td>
                                     </tr>
-                                    <tr>
+                                    <tr class="draw">
                                         <td>Draw</td>
-                                        <td>0</td>
-                                        <td>0</td>
-                                        <td class="table-info">0</td>
+                                        <td id="home"></td>
+                                        <td id="away"></td>
+                                        <td class="table-info" id="total"></td>
                                     </tr>
-                                    <tr>
+                                    <tr class="loss">
                                         <td>Loss</td>
-                                        <td>0</td>
-                                        <td>0</td>
-                                        <td class="table-info">0</td>
+                                        <td id="home"></td>
+                                        <td id="away"></td>
+                                        <td class="table-info" id="total"></td>
                                     </tr>
                                     <tr>
                                         <th colspan="4" class="table-secondary">Goals Scored</th>
                                     </tr>
-                                    <tr>
+                                    <tr class="for">
                                         <td>For</td>
-                                        <td>100</td>
-                                        <td>56</td>
-                                        <td class="table-info">156</td>
+                                        <td id="home"></td>
+                                        <td id="away"></td>
+                                        <td class="table-info" id="total"></td>
                                     </tr>
-                                    <tr>
+                                    <tr class="against">
                                         <td>Against</td>
-                                        <td>23</td>
-                                        <td>1</td>
-                                        <td class="table-info">24</td>
+                                        <td id="home"></td>
+                                        <td id="away"></td>
+                                        <td class="table-info" id="total"></td>
                                     </tr>
-                                    <tr>
+                                    <tr class="csheets">
                                         <td>Clean Sheets</td>
-                                        <td>23</td>
-                                        <td>23</td>
-                                        <td class="table-info">23</td>
+                                        <td id="home"></td>
+                                        <td id="away"></td>
+                                        <td class="table-info" id="total"></td>
                                     </tr>
                                 </tbody>
                             </table>
                         </div>
-                        <div class="col-4 other-stats align-self-center">
-                            <div><h6>Longest Win Streak: 2</h6></div>
-                            <div><h6>Longest Losing Streak: 2</h6></div>
-                            <div><h6>Biggest Win: 4-0</h6></div>
-                            <div><h6>Biggest Loss: 0-2</h6></div>
+                        <div class="col-4 other-stats align-self-center" id="table-1">
+                            <div><h3>Longest Win Streak: <span id="wstreak"></span></h3></div>
+                            <div><h3>Longest Losing Streak: <span id="lstreak"></span></h3></div>
+                            <div><h3>Biggest Win: <span id="bwin"></span></h3></div>
+                            <div><h3>Biggest Loss: <span id="bloss"></span></h3></div>
                         </div>
                     </div>
                   </div>
@@ -164,7 +164,7 @@
                     <div class="row">
                         <div class="col">
                             <p class="text-muted">Enter Team Name</p>
-                            <form class = "departure">
+                            <form class = "search">
                                 <input type="search" placeholder="Search" id = "search1" class="form-control" required list="results1">
                                 <datalist id="results1">
                                 </datalist>
@@ -173,11 +173,11 @@
                     </div>
                     <div class="row">
                         <div class="col-8 team-stats">
-                            <header class="team-header">
-                                <h2>Burnley</h2>
-                                <img src="https://media.api-sports.io/football/teams/44.png" id="logo">
+                            <header class="team-header" id="table-2">
+                                <h2 id="team-name"></h2>
+                                <img src="" id="logo">
                             </header>
-                            <table class="table table-hover">
+                            <table class="table table-hover" id="table-2">
                                 <thead>
                                     <tr>
                                         <th></th>
@@ -187,59 +187,59 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr>
+                                    <tr class="gplayed">
                                         <td>Games Played</td>
-                                        <td>19</td>
-                                        <td>19</td>
-                                        <td class="table-info">38</td>
+                                        <td id="home"></td>
+                                        <td id="away"></td>
+                                        <td class="table-info" id="total"></td>
                                     </tr>
-                                    <tr>
+                                    <tr class="wins">
                                         <td>Wins</td>
-                                        <td>19</td>
-                                        <td>19</td>
-                                        <td class="table-info">38</td>
+                                        <td id="home"></td>
+                                        <td id="away"></td>
+                                        <td class="table-info" id="total"></td>
                                     </tr>
-                                    <tr>
+                                    <tr class="draw">
                                         <td>Draw</td>
-                                        <td>0</td>
-                                        <td>0</td>
-                                        <td class="table-info">0</td>
+                                        <td id="home"></td>
+                                        <td id="away"></td>
+                                        <td class="table-info" id="total"></td>
                                     </tr>
-                                    <tr>
+                                    <tr class="loss">
                                         <td>Loss</td>
-                                        <td>0</td>
-                                        <td>0</td>
-                                        <td class="table-info">0</td>
+                                        <td id="home"></td>
+                                        <td id="away"></td>
+                                        <td class="table-info" id="total"></td>
                                     </tr>
                                     <tr>
                                         <th colspan="4" class="table-secondary">Goals Scored</th>
                                     </tr>
-                                    <tr>
+                                    <tr class="for">
                                         <td>For</td>
-                                        <td>100</td>
-                                        <td>56</td>
-                                        <td class="table-info">156</td>
+                                        <td id="home"></td>
+                                        <td id="away"></td>
+                                        <td class="table-info" id="total"></td>
                                     </tr>
-                                    <tr>
+                                    <tr class="against">
                                         <td>Against</td>
-                                        <td>23</td>
-                                        <td>1</td>
-                                        <td class="table-info">24</td>
+                                        <td id="home"></td>
+                                        <td id="away"></td>
+                                        <td class="table-info" id="total"></td>
                                     </tr>
-                                    <tr>
+                                    <tr class="csheets">
                                         <td>Clean Sheets</td>
-                                        <td>23</td>
-                                        <td>23</td>
-                                        <td class="table-info">23</td>
+                                        <td id="home"></td>
+                                        <td id="away"></td>
+                                        <td class="table-info" id="total"></td>
                                     </tr>
                                 </tbody>
                             </table>
                         </div>
-                        <div class="col-4 other-stats align-self-center">
-                            <div><h6>Longest Win Streak: 2</h6></div>
-                            <div><h6>Longest Losing Streak: 2</h6></div>
-                            <div><h6>Biggest Win: 4-0</h6></div>
-                            <div><h6>Biggest Loss: 0-2</h6></div>
+                        <div class="col-4 other-stats align-self-center" id="table-2">
+                            <div><h3>Longest Win Streak: <span id="wstreak"></span></h3></div>
+                            <div><h3>Longest Losing Streak: <span id="lstreak"></span></h3></div>
+                            <div><h3>Biggest Win: <span id="bwin"></span></h3></div>
+                            <div><h3>Biggest Loss: <span id="bloss"></span></h3></div>
                         </div>
                     </div>
                   </div>

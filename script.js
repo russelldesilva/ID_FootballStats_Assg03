@@ -120,26 +120,6 @@ function next10(dateArray, matchDict, matches, startDate, endDate, compId){
     });
 }
 
-function searchTeam(searchTerm,resultsId){
-    var settings = {
-        "url": `https://api-football-v1.p.rapidapi.com/v3/teams?search=${searchTerm}`,
-        "method": "GET",
-        "timeout": 0,
-        "headers": {
-          "x-rapidapi-key": "89f6bb3f0cmshbe238b12b48adb9p15e37bjsnc3cca11640dc"
-        },
-      };
-      
-      $.ajax(settings).done(function (response) {
-        let data = response.response;
-        for (let index = 0; index < data.length; index++) {
-            let newOption = document.createElement("option");
-            newOption.setAttribute("id",`teamId-${data[index].team.id}`);
-            newOption.setAttribute("value",`${data[index].team.name}`);
-            $(`datalist#${resultsId}`).append(newOption);
-        }
-    });
-}
 
 function createMatchCard(fixture, index, live){
     live = live || null;
@@ -242,6 +222,54 @@ function rowColour(desc){
     }
 }
 
+function biggestScore(score1, score2){
+    let array1 = [0,0];
+    let array2 = [0,0];
+    if (score1 != null){
+        array1 = score1.split('-');
+    }
+    if (score2 != null){
+        array2 = score2.split('-');
+    }
+    let diff1 = Math.abs(array1[0] - array1[1]);
+    let diff2 = Math.abs(array2[0] - array2[1]);
+    if (diff1 === Math.max(diff1,diff2)){
+        return score1;
+    }
+    else{
+        return score2;
+    }
+}
+
+function populateTable(data, tableId){
+    $(`#${tableId} > img`).attr("src",data.team.logo)
+    $(`#${tableId} > tbody > .gplayed > #home`).html(data.fixtures.played.home);
+    $(`#${tableId} > tbody > .gplayed > #away`).html(data.fixtures.played.away);
+    $(`#${tableId} > tbody > .gplayed > #total`).html(data.fixtures.played.total);
+    $(`#${tableId} > tbody > .wins > #home`).html(data.fixtures.wins.home);
+    $(`#${tableId} > tbody > .wins > #away`).html(data.fixtures.wins.away);
+    $(`#${tableId} > tbody > .wins > #total`).html(data.fixtures.wins.total);
+    $(`#${tableId} > tbody > .draw > #home`).html(data.fixtures.draws.home);
+    $(`#${tableId} > tbody > .draw > #away`).html(data.fixtures.draws.away);
+    $(`#${tableId} > tbody > .draw > #total`).html(data.fixtures.draws.total);
+    $(`#${tableId} > tbody > .loss > #home`).html(data.fixtures.loses.home);
+    $(`#${tableId} > tbody > .loss > #away`).html(data.fixtures.loses.away);
+    $(`#${tableId} > tbody > .loss > #total`).html(data.fixtures.loses.total);
+    $(`#${tableId} > tbody > .for > #home`).html(data.goals.for.total.home);
+    $(`#${tableId} > tbody > .for > #away`).html(data.goals.for.total.away);
+    $(`#${tableId} > tbody > .for > #total`).html(data.goals.for.total.total);
+    $(`#${tableId} > tbody > .against > #home`).html(data.goals.against.total.home);
+    $(`#${tableId} > tbody > .against > #away`).html(data.goals.against.total.away);
+    $(`#${tableId} > tbody > .against > #total`).html(data.goals.against.total.total);
+    $(`#${tableId} > tbody > .csheets > #home`).html(data.clean_sheet.home);
+    $(`#${tableId} > tbody > .csheets > #away`).html(data.clean_sheet.away);
+    $(`#${tableId} > tbody > .csheets > #total`).html(data.clean_sheet.total);
+    $(`#${tableId} > div > h3 > #wstreak`).html(data.biggest.streak.wins);
+    $(`#${tableId} > div > h3 > #lstreak`).html(data.biggest.streak.loses);
+    $(`#${tableId} > div > h3 > #bwin`).html(biggestScore(data.biggest.wins.home, data.biggest.wins.away));
+    $(`#${tableId} > div > h3 > #bloss`).html(biggestScore(data.biggest.loses.home, data.biggest.loses.away));
+}
+
 $("#view-table").click(function(){newPage("table.html")});
 $("#view-stats").click(function(){newPage("stats2.html")});
 $("#h2h-stats").click(function(){newPage("stats3.html")});
@@ -262,6 +290,8 @@ let startDate = Date.now();
 let endDate = startDate + 604800000;
 let compId = parseInt(localStorage.getItem("compId"));
 let compName = localStorage.getItem("compName");
+let results = {};
+
 $("#view-table").hide();
 $(".no-score").hide();
 $(".no-table").hide()
@@ -415,17 +445,67 @@ $.ajax(settings).done(function (response) {
 });
 
 //================= stats2.hhtml ==============
-$("input#search").keyup(function(){
-    let searchTerm = $("input#search").val();
-    if (searchTerm.length === 3){
-        $("datalist#results > *").remove();
-        searchTeam(searchTerm,"results");
-    }
+var settings = {
+    "url": `https://api-football-v1.p.rapidapi.com/v3/teams?league=${compId}&season=2020`,
+    "method": "GET",
+    "timeout": 0,
+    "headers": {
+      "x-rapidapi-key": "89f6bb3f0cmshbe238b12b48adb9p15e37bjsnc3cca11640dc"
+    },
+};
+var dvalue = {};
+$.ajax(settings)
+.done(function (response) {
+    let data = response.response;
+    for (let index = 0; index < data.length; index++) {
+        let newOption = document.createElement("option");
+        newOption.setAttribute("value",data[index].team.name);
+        newOption.setAttribute("data-value",data[index].team.id);
+        $('datalist').append(newOption);
+    };
+    $('option').each(function(i, el) {
+        dvalue[$(el).val()] = $(el).data("value");
+    });
+    localStorage.setItem("results", JSON.stringify(dvalue));
 });
-$("input#search1").keyup(function(){
-    let searchTerm = $("input#search1").val();
-    if (searchTerm.length === 3){
-        $("datalist#results > *").remove();
-        searchTeam(searchTerm,"results1");
+
+$("form.search").submit(function(event){
+    let value1 = $("input#search").val();
+    let value2 = $("input#search1").val();
+    let results = JSON.parse(localStorage.getItem("results"));
+    let teamId = results[value1];
+    let teamId2 = results[value2];
+    alert(teamId);
+    console.log(value2);
+    var settings = {
+        "url": `https://api-football-v1.p.rapidapi.com/v3/teams/statistics?league=${compId}&season=2020&team=${teamId}`,
+        "method": "GET",
+        "timeout": 0,
+        "headers": {
+          "x-rapidapi-key": "89f6bb3f0cmshbe238b12b48adb9p15e37bjsnc3cca11640dc"
+        },
+    };
+    $.ajax(settings).done(function (response) {
+        let data = response.response;
+        console.log(data);
+        $("#table-1 > #team-name").text(data.team.name);    
+        populateTable(data, "table-1");
+    });
+    if (value2 != null){
+        var settings = {
+            "url": `https://api-football-v1.p.rapidapi.com/v3/teams/statistics?league=${compId}&season=2020&team=${teamId2}`,
+            "method": "GET",
+            "timeout": 0,
+            "headers": {
+              "x-rapidapi-key": "89f6bb3f0cmshbe238b12b48adb9p15e37bjsnc3cca11640dc"
+            },
+        };
+        $.ajax(settings).done(function (response) {
+            let data = response.response;
+            console.log(data);
+            $("#table-2 > #team-name").text(data.team.name);    
+            populateTable(data, "table-2");
+        });
     }
-});
+    event.preventDefault();
+})
