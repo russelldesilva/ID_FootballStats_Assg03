@@ -46,13 +46,9 @@ function roundName(name){ //change name of competition round to something more c
 
 function next10(dateArray, matchDict, matches, startDate, endDate, compId){ //get and display the matches for the next/previous week
     startDate = new Date(startDate); 
-    let validSDate = `${startDate.getFullYear()}-
-    ${(startDate.getMonth()+1).toLocaleString('en-US',{minimumIntegerDigits:2})}-
-    ${startDate.getDate().toLocaleString('en-US',{minimumIntegerDigits:2})}` //validXdate = YYYY-MM-DD format, minimumIntegerDigits:2 to ensure month and day has 2 digits
+    let validSDate = `${startDate.getFullYear()}-${(startDate.getMonth()+1).toLocaleString('en-US',{minimumIntegerDigits:2})}-${startDate.getDate().toLocaleString('en-US',{minimumIntegerDigits:2})}` //validXdate = YYYY-MM-DD format, minimumIntegerDigits:2 to ensure month and day has 2 digits
     endDate = new Date(endDate);
-    let validEDate = `${endDate.getFullYear()}-
-    ${(endDate.getMonth()+1).toLocaleString('en-US',{minimumIntegerDigits:2})}-
-    ${endDate.getDate().toLocaleString('en-US',{minimumIntegerDigits:2})}`
+    let validEDate = `${endDate.getFullYear()}-${(endDate.getMonth()+1).toLocaleString('en-US',{minimumIntegerDigits:2})}-${endDate.getDate().toLocaleString('en-US',{minimumIntegerDigits:2})}`
     $("#startdate").html(validSDate);
     $("#enddate").html(validEDate);
     var settings = {
