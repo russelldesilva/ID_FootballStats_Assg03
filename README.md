@@ -45,3 +45,6 @@ Screenshots:
 ### Acknowledgements
 
 - We received inspiration for this project from [OneFootball](https://onefootball.com/en/home) and the official [Premier League website](https://www.premierleague.com/).
+
+### Github IO
+- Link to Github page: https://russelldesilva.github.io/ID_FootballStats_Assg03/table.html
