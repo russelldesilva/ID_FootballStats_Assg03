@@ -72,7 +72,6 @@ function next10(dateArray, matchDict, matches, startDate, endDate, compId){
                 let datetime = new Date(fixture.fixture.date);
                 let date = getFullDate(datetime);
                 matchDict[matchCard.outerHTML] = datetime;
-                console.log(datetime, fixture.teams.home.name);
                 if(! initDateArray(dateArray, date)) {
                     dateArray.push(date);
                 }
@@ -291,6 +290,7 @@ let endDate = startDate + 604800000;
 let compId = parseInt(localStorage.getItem("compId"));
 let compName = localStorage.getItem("compName");
 let results = {};
+$("input").attr("placeholder",`Search from ${compName}`);
 
 $("#view-table").hide();
 $(".no-score").hide();
@@ -303,8 +303,7 @@ if (isNaN(compId)){
 if (compName === null){
     compName = "English Premier League"
 }
-$("header>h1").html(compName);
-console.log(compId);
+$("header>#compName").html(compName);
 var settings = {
     "url": `https://api-football-v1.p.rapidapi.com/v3/fixtures?league=${compId}&live=all`,
     "method": "GET",
@@ -435,7 +434,6 @@ $.ajax(settings).done(function (response) {
         $(".top-scorer > #card-container > .card > h2 > #goals").text(topscorer.statistics[0].goals.total);
         for (let index = 1; index < 10; index++) {
             let player = data[index];
-            console.log(index, player);
             $(`#pos-${index+1}.stats-row > #logo`).attr("src",player.statistics[0].team.logo);
             $(`#pos-${index+1}.stats-row > .player > #name`).text(player.player.name);
             $(`#pos-${index+1}.stats-row > .player > #team`).text(player.statistics[0].team.name);
@@ -475,8 +473,6 @@ $("form.search").submit(function(event){
     let results = JSON.parse(localStorage.getItem("results"));
     let teamId = results[value1];
     let teamId2 = results[value2];
-    alert(teamId);
-    console.log(value2);
     var settings = {
         "url": `https://api-football-v1.p.rapidapi.com/v3/teams/statistics?league=${compId}&season=2020&team=${teamId}`,
         "method": "GET",
@@ -487,7 +483,6 @@ $("form.search").submit(function(event){
     };
     $.ajax(settings).done(function (response) {
         let data = response.response;
-        console.log(data);
         $("#table-1 > #team-name").text(data.team.name);    
         populateTable(data, "table-1");
     });
@@ -502,7 +497,6 @@ $("form.search").submit(function(event){
         };
         $.ajax(settings).done(function (response) {
             let data = response.response;
-            console.log(data);
             $("#table-2 > #team-name").text(data.team.name);    
             populateTable(data, "table-2");
         });
