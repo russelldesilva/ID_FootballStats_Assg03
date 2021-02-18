@@ -13,10 +13,10 @@ User stories:
 Link to [Adobe XD wireframe](https://xd.adobe.com/view/76a84dcc-9ebc-460e-a6e8-f4a19545e9f7-23fb/)
 
 Screenshots:
-[index.html](screenshots/index.html.png)
-[table.html](screenshots/table.html.png)
-[stats.html](screenshots/stats.html.png)
-[stats2.html](screenshots/stats2.html.png)
+[index.html,](screenshots/index.html.png)
+[table.html,](screenshots/table.html.png)
+[stats.html,](screenshots/stats.html.png)
+[stats2.html,](screenshots/stats2.html.png)
 [stats3.html](screenshots/stats3.html.png)
 
 ## Features
@@ -39,12 +39,12 @@ Screenshots:
     - This project employs this API to get the necessary data for the website
 
 ## Credits
-**Chief Designer** - Ayken Lee Kang 
-**Chief Developer** - Russell de Silva
+- **Chief Designer** - Ayken Lee Kang 
+- **Chief Developer** - Russell de Silva
 
 ### Acknowledgements
 
 - We received inspiration for this project from [OneFootball](https://onefootball.com/en/home) and the official [Premier League website](https://www.premierleague.com/).
 
 ### Github IO
-- Link to Github page: https://russelldesilva.github.io/ID_FootballStats_Assg03/table.html
+- Github pages link: https://russelldesilva.github.io/ID_FootballStats_Assg03/table.html
