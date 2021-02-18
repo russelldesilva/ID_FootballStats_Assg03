@@ -13,19 +13,20 @@ User stories:
 Link to [Adobe XD wireframe](https://xd.adobe.com/view/76a84dcc-9ebc-460e-a6e8-f4a19545e9f7-23fb/)
 
 Screenshots:
+[index.html](screenshots/index.html.png)
+[table.html](screenshots/table.html.png)
+[stats.html](screenshots/stats.html.png)
+[stats2.html](screenshots/stats2.html.png)
+[stats3.html](screenshots/stats3.html.png)
 
 ## Features
 
-In this section, you should go over the different parts of your project, and describe each in a sentence or so.
+- Match scores: Allows users to check match scores of matches that have already took place or are currently taking place
+- League table: Allows users to check the league tables or competitions
+- Top scorers: Allows users to check the top scorers of each competition
+- Team statistics: Allows users to check the statistics of a team in a specific competition
+- H2H statistics: Allows users to check compare statistics between 2 teams (head-to-head comparison);
  
-### Existing Features
-- Feature 1 - allows users X to achieve Y, by having them fill out Z
-- ...
-
-In addition, you may also use this section to discuss plans for additional features to be implemented in the future:
-
-### Features Left to Implement
-- Another feature idea
 
 ## Technologies Used
 - [JQuery](https://jquery.com)
@@ -37,15 +38,9 @@ In addition, you may also use this section to discuss plans for additional featu
 - [Football API](https://rapidapi.com/api-sports/api/api-football/details)
     - This project employs this API to get the necessary data for the website
 
-## Testing
-
 ## Credits
 **Chief Designer** - Ayken Lee Kang 
 **Chief Developer** - Russell de Silva
-
-### Content
-
-### Media
 
 ### Acknowledgements
 
